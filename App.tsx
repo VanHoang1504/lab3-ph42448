@@ -73,12 +73,12 @@ const App = () => {
         <Image
           style={{ width: 50, height:50 ,borderRadius:5 }}
           source={{
-            uri: 'https://i.pinimg.com/originals/f5/95/eb/f595ebfa9c5bb2083839f59465263893.png',
+            uri: 'https://i.pinimg.com/236x/f5/00/b0/f500b03cb4ace287e4fff8fafbe25707.jpg',
           }}
         />
         <Text>hoangcvph42448</Text>
         <View style={{flexDirection:'row',marginTop:10}}>
-        <Text style={{  marginRight:20,backgroundColor:'green',padding:7,borderRadius:15}}>Popular</Text>
+        <Text style={{  marginRight:20,backgroundColor:'#CC3366',padding:7,borderRadius:15}}>Popular</Text>
         <Text style={{marginRight:20 ,padding:7 }}>Product Design</Text>
         <Text style={{ marginRight:20,padding:7}}>Development</Text>
         <Text style={{ padding:7 }}>Project File</Text>
@@ -114,7 +114,7 @@ const App = () => {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: 'lightblue',
+    backgroundColor: '#DCDCDC',
     justifyContent: 'center',
     overflow: 'hidden',
     paddingTop: 40,
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   listHeader: {
     fontSize: 20,
     fontWeight: 'bold',
-    backgroundColor: 'white',
+    backgroundColor: '#778899',
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 20,
