@@ -1,118 +1,231 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+// import React from 'react';
+// import { Button, View, StyleSheet } from 'react-native';
+// import Animated, {
+//   useSharedValue,
+//   withSpring,
+//   useAnimatedStyle,
+// } from 'react-native-reanimated';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+// export default function App() {
+//   const translateY = useSharedValue(0);
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+//   const handlePress = () => {
+//     translateY.value += 50; // Di chuyển lên trên
+//   };
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+//   const animatedStyles = useAnimatedStyle(() => ({
+//     transform: [{ translateY: withSpring(translateY.value) }],
+//   }));
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+//   return (
+//     <View style={styles.container}>
+//       <Button onPress={handlePress} title="Click me" />
+//       <Animated.View style={[styles.box, animatedStyles]} />
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   box: {
+//     height: 50,
+//     width: 50,
+//     backgroundColor: '#b58df1',
+//     borderRadius: 20,
+//     marginTop: 20, // Thay đổi marginLeft thành marginTop để box không bị che khuất
+//   },
+// });
+
+
+
+// // lab3 b3
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, Animated, FlatList, Image } from 'react-native';
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
+const App = () => {
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const [headerHeight, setHeaderHeight] = useState(150);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    { useNativeDriver: true },
   );
-}
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const translateYInterpolate = scrollY.interpolate({
+    inputRange: [0, 160],
+    outputRange: [0, -110],
+    extrapolate: 'clamp',
+  });
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const headerStyle = {
+    transform: [{ translateY: translateYInterpolate }],
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    <View style={{ flex: 1 }}>
+      <Animated.View style={[styles.header, headerStyle]}>
+        <Image
+          style={{ width: 50, height:50 ,borderRadius:5 }}
+          source={{
+            uri: 'https://i.pinimg.com/originals/f5/95/eb/f595ebfa9c5bb2083839f59465263893.png',
+          }}
+        />
+        <Text>hoangcvph42448</Text>
+        <View style={{flexDirection:'row',marginTop:10}}>
+        <Text style={{  marginRight:20,backgroundColor:'green',padding:7,borderRadius:15}}>Popular</Text>
+        <Text style={{marginRight:20 ,padding:7 }}>Product Design</Text>
+        <Text style={{ marginRight:20,padding:7}}>Development</Text>
+        <Text style={{ padding:7 }}>Project File</Text>
+
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </Animated.View>
+      <Text style={styles.fixedText}>Trang Chủ</Text>
+      <Animated.View style={[headerStyle]}>
+      <Text style={styles.listHeader}>Popular Quizes</Text>
+      <AnimatedFlatList
+        contentContainerStyle={styles.scrollViewContent}
+        scrollEventThrottle={16}
+        onScroll={handleScroll}
+        data={[
+          'Item 1',
+          'Item 2',
+          'Item 3',
+          'Item 4',
+          'Item 5',
+          'Item 6',
+          'Item 7',
+          'Item 8',
+          
+        ]}
+        renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
+        keyExtractor={(item, index) => index.toString()}
+      />
+      </Animated.View>
+      
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  header: {
+    backgroundColor: 'lightblue',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    paddingTop: 40,
+    paddingBottom: 10,
+    paddingLeft: 20,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  scrollViewContent: {
+    paddingTop: 5,
+    height:750
   },
-  sectionDescription: {
-    marginTop: 8,
+  listHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    backgroundColor: 'white',
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+  },
+  item: {
+    padding: 20,
     fontSize: 18,
-    fontWeight: '400',
+    height: 70,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
-  highlight: {
-    fontWeight: '700',
+  fixedText: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'lightblue',
+    fontSize: 16,
+    paddingLeft: 20,
   },
 });
 
 export default App;
+
+// lab3 bai2
+// import React, { useRef } from 'react';
+// import { StyleSheet, Text, View, FlatList, Animated } from 'react-native';
+
+// const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
+// const App = () => {
+//   const scrollY = useRef(new Animated.Value(0)).current;
+
+//   const renderItem = ({ item, index }) => {
+//     const inputRange = [-1, 0, index * 50, (index + 1) * 70];
+
+//     const opacity = scrollY.interpolate({
+//       inputRange,
+//       outputRange: [-0, 1, 1, -0],
+//     });
+
+//     const scale = scrollY.interpolate({
+//       inputRange,
+//       outputRange: [-0.5, 1, 1, -0.5],
+//     });
+
+//     return (
+//       <Animated.View style={{ opacity, transform: [{ scale }] }}>
+//         <Text style={styles.item}>{item}</Text>
+//       </Animated.View>
+//     );
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <AnimatedFlatList
+//         data={['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5','Item 6', 'Item 7', 'Item 8', 'Item 9', 'Item 5','Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5','Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5','Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5','Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']}
+//         renderItem={renderItem}
+//         keyExtractor={(item, index) => index.toString()}
+//         scrollEventThrottle={16}
+//         onScroll={Animated.event(
+//           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+//           { useNativeDriver: true }
+//         )}
+//       />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   item: {
+//     borderRadius:20,
+//     width:330,
+//     padding: 20,
+//     marginVertical: 2,
+//     backgroundColor: '#ccc',
+//   },
+// });
+
+// export default App;
+// import { StyleSheet, Text, View } from 'react-native'
+// import React from 'react'
+// import Labbai3 from './bailab3'
+
+// const App = () => {
+//   return (
+//     <View>
+//       <Labbai3/>
+//     </View>
+//   )
+// }
+
+// export default App
+
+// const styles = StyleSheet.create({})
